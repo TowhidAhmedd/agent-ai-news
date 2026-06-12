@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Brief — {{ date }}</title>
+<style>
+  /* Reset */
+  body, p, h1, h2, h3, ul, li { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.6;
+  }
+  a { color: #2563eb; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Outer wrapper */
+  .wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 12px 12px 0 0;
+    padding: 36px 32px 28px;
+    text-align: center;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #64b5f6;
+    margin-bottom: 8px;
+  }
+  .header-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+  }
+  .header-title span { color: #4fc3f7; }
+  .header-date {
+    font-size: 14px;
+    color: #90caf9;
+    margin-top: 8px;
+  }
+  .header-stats {
+    display: inline-flex;
+    gap: 24px;
+    margin-top: 20px;
+    padding: 10px 24px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 24px;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; color: #4fc3f7; }
+  .stat-label { font-size: 10px; color: #90caf9; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* Main content area */
+  .content {
+    background: #ffffff;
+    padding: 0 32px;
+  }
+
+  /* Section headers */
+  .section-header {
+    padding: 28px 0 16px;
+    border-bottom: 2px solid #e8eaf6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-header .icon {
+    font-size: 20px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #1565c0;
+  }
+
+  /* Article card */
+  .article-card {
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .article-card:last-child { border-bottom: none; }
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: #1565c0;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .category-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+  .source-tag {
+    font-size: 11px;
+    color: #78909c;
+  }
+  .article-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .article-title a { color: #1a1a2e; }
+  .article-title a:hover { color: #1565c0; }
+  .executive-summary {
+    font-size: 14px;
+    color: #37474f;
+    margin-bottom: 10px;
+  }
+  .takeaways {
+    margin: 8px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .takeaways li {
+    font-size: 13px;
+    color: #455a64;
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  .takeaways li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #42a5f5;
+    font-size: 11px;
+    top: 4px;
+  }
+  .why-matters {
+    background: #e8f5e9;
+    border-left: 3px solid #43a047;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #2e7d32;
+    margin-top: 10px;
+  }
+  .why-matters strong { font-weight: 600; }
+  .read-more {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1565c0;
+    padding: 5px 14px;
+    border: 1.5px solid #1565c0;
+    border-radius: 20px;
+    transition: all 0.15s;
+  }
+
+  /* Trends / Signals / Research sections */
+  .insight-section {
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .insight-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+  }
+  .insight-list li {
+    font-size: 13.5px;
+    color: #37474f;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .insight-list.trends li::before { content: "📈"; position: absolute; left: 0; font-size: 12px; top: 7px; }
+  .insight-list.signals li::before { content: "⚡"; position: absolute; left: 0; font-size: 12px; top: 7px; }
+  .insight-list.research li::before { content: "🔬"; position: absolute; left: 0; font-size: 12px; top: 7px; }
+
+  /* Footer */
+  .footer {
+    background: #1a1a2e;
+    border-radius: 0 0 12px 12px;
+    padding: 24px 32px;
+    text-align: center;
+  }
+  .footer p { font-size: 12px; color: #78909c; line-height: 1.7; }
+  .footer a { color: #4fc3f7; }
+  .footer-brand { font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-eyebrow">Automated Intelligence Briefing</div>
+    <div class="header-title">AI <span>Daily</span> Brief</div>
+    <div class="header-date">{{ date }}</div>
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-num">{{ total_articles }}</div>
+        <div class="stat-label">Sources Scanned</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">{{ top_n }}</div>
+        <div class="stat-label">Top Stories</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">{{ feed_count }}</div>
+        <div class="stat-label">RSS Feeds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main Content ───────────────────────────────────────────────────── -->
+  <div class="content">
+
+    <!-- Top Headlines -->
+    <div class="section-header">
+      <span class="icon">🏆</span>
+      <span class="section-title">Top Headlines</span>
+    </div>
+
+    {% for article in articles %}
+    <div class="article-card">
+      <div class="article-meta">
+        <span class="rank-badge">{{ article.rank }}</span>
+        {% if article.category %}
+        <span class="category-tag">{{ article.category }}</span>
+        {% endif %}
+        <span class="source-tag">{{ article.source_name }}</span>
+      </div>
+
+      <div class="article-title">
+        <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+      </div>
+
+      {% if article.executive_summary %}
+      <div class="executive-summary">{{ article.executive_summary }}</div>
+      {% endif %}
+
+      {% if article.key_takeaways %}
+      <ul class="takeaways">
+        {% for tk in article.key_takeaways %}
+        <li>{{ tk }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if article.why_it_matters %}
+      <div class="why-matters">
+        <strong>Why it matters:</strong> {{ article.why_it_matters }}
+      </div>
+      {% endif %}
+
+      <a class="read-more" href="{{ article.url }}" target="_blank">Read Full Article →</a>
+    </div>
+    {% endfor %}
+
+    <!-- Quick Trends -->
+    {% if quick_trends %}
+    <div class="section-header" style="margin-top:8px">
+      <span class="icon">📈</span>
+      <span class="section-title">Quick Trends</span>
+    </div>
+    <div class="insight-section">
+      <ul class="insight-list trends">
+        {% for t in quick_trends %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Market Signals -->
+    {% if market_signals %}
+    <div class="section-header">
+      <span class="icon">⚡</span>
+      <span class="section-title">Market Signals</span>
+    </div>
+    <div class="insight-section">
+      <ul class="insight-list signals">
+        {% for s in market_signals %}<li>{{ s }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Research Highlights -->
+    {% if research_highlights %}
+    <div class="section-header">
+      <span class="icon">🔬</span>
+      <span class="section-title">Research Highlights</span>
+    </div>
+    <div class="insight-section" style="border-bottom:none">
+      <ul class="insight-list research">
+        {% for r in research_highlights %}<li>{{ r }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+  </div><!-- /content -->
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <div class="footer">
+    <div class="footer-brand">🤖 AI News Agent</div>
+    <p>
+      Automated briefing generated at {{ generated_at }} ({{ timezone }})<br>
+      Powered by LangGraph · LangChain · Free-tier LLMs<br>
+      <a href="http://localhost:8000">Dashboard</a> ·
+      <a href="http://localhost:8000/newsletter/latest">View in browser</a>
+    </p>
+  </div>
+
+</div><!-- /wrapper -->
+</body>
+</html>

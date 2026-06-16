@@ -1,0 +1,12 @@
+
+
+AI News Agent | LangGraph · LangChain · FastAPI · APScheduler · SQLite · Docker · Groq
+Built a production-grade, fully automated AI news intelligence system using an 8-node LangGraph multi-agent pipeline that discovers, scores, deduplicates, and summarizes AI industry news daily — delivering a formatted HTML briefing email at 6:30 AM every day, 100% free-tier.
+
+Engineered a stateful async LangGraph workflow with 8 specialized agents (Discovery → Extraction → Scoring → Dedup → Summarization → Ranking → Newsletter → Email), each independently error-resilient so no single node failure kills the pipeline
+Designed parallel async RSS ingestion across 18 sources (OpenAI, Anthropic, DeepMind, VentureBeat, MIT Tech Review, etc.) using httpx + asyncio, with concurrent LLM batch scoring (5 articles/call, 3 parallel calls) to minimize latency and token costs
+Implemented two-stage deduplication — URL normalization + Jaccard title similarity — eliminating syndicated duplicates without any LLM call, cutting downstream processing cost significantly
+Built a provider-agnostic LLM factory (Groq / OpenRouter / Gemini) behind a single interface, enabling zero-code provider switching via environment variable
+Integrated LangSmith observability for full per-run distributed tracing — node latency, token usage, error attribution — across every pipeline execution
+Deployed via Docker Compose with APScheduler cron job, FastAPI REST dashboard (/run-now, /newsletter/latest, /metrics), and SQLite persistence for article history and email logs
+Achieved 32/32 test coverage across unit, integration, and end-to-end workflow tests using pytest + pytest-asyncio
